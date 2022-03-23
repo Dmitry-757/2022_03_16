@@ -28,6 +28,18 @@ class DiaryService{
             StudentDiaryImp.twm.remove(topic);
         }
     }
+
+    static void edit(String topic){
+        if(StudentDiaryImp.twm.containsKey(topic)){
+            System.out.println("Current marks for topic " + topic + " are");
+            Arrays.stream(StudentDiaryImp.twm.get(topic)).forEach(v -> System.out.print(""+v+", "));
+            System.out.println("Enter number of mark for edit");
+            //editing marks
+
+        }
+    }
+
+
     static void printMarks(String topic){
         if(StudentDiaryImp.twm.containsKey(topic)){
             Arrays.stream(StudentDiaryImp.twm.get(topic)).forEach(v -> System.out.print(""+v+", "));
@@ -43,12 +55,11 @@ class DiaryService{
         }
 
     }
-
 }
+
 
 public class StudentDiaryImp {
     public static HashMap<String, Integer[]> twm = new HashMap<>();
-
 
 
     public static void main(String[] args) {
@@ -109,6 +120,26 @@ public class StudentDiaryImp {
                                     throw new Exception("wrong input - can`t reed topic...");
                                 }
                                 DiaryService.remove(topic);
+                            }
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    case 3 ->{
+                        System.out.println("Enter topic for увше. Example: MarksizmLenenizm");
+                        try{
+                            if(sc.hasNextLine()) {
+                                String topic = null;
+                                line = sc.nextLine();
+                                Matcher topicMatcher = topicPattern.matcher(line);
+                                if (topicMatcher.find()) {
+                                    topic = topicMatcher.group();
+                                    System.out.println("topic = " + topic);
+                                } else {
+                                    throw new Exception("wrong input - can`t reed topic...");
+                                }
+                                DiaryService.edit(topic);
                             }
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
