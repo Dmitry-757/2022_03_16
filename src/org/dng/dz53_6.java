@@ -1,7 +1,7 @@
 package org.dng;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -14,6 +14,38 @@ import java.util.stream.IntStream;
  * клавиатуры.
  */
 
+class MyStorage { //this is the storage for the number of duplications and their indices for each element of the array
+    private int numDuplication;
+    private LinkedList<Integer> index_y = new LinkedList<>();
+    private LinkedList<Integer> index_x = new LinkedList<>();
+
+    MyStorage(int numDuplication, int index_y, int index_x) {
+        this.numDuplication = numDuplication;
+        this.index_y.add(index_y);
+        this.index_x.add(index_x);
+    }
+
+    public int getNumDuplication() {
+        return numDuplication;
+    }
+
+    public void setNumDuplication(int numDuplication) {
+        this.numDuplication = numDuplication;
+    }
+
+    public LinkedList<Integer> getIndex_y() {
+        return index_y;
+    }
+    public LinkedList<Integer> getIndex_x() {
+        return index_x;
+    }
+
+    public void incNumDuplication(int y, int x) {
+        this.numDuplication = ++this.numDuplication;
+        this.index_y.add(y);
+        this.index_x.add(x);
+    }
+}
 
 public class dz53_6 {
     public static int inputIntValue(String name) {
@@ -52,14 +84,23 @@ public class dz53_6 {
 
     public static int getMaxStrm(int[][] arr) {
         //*** let`s reduce dimension of arr
-        int[] arr2 = new int[arr.length * arr[0].length];
-        for (int i = 0; i < arr.length; i++) {
-            System.arraycopy(arr[i], 0, arr2, i * arr[i].length, arr[i].length);
-        }
-//        for (int x:arr2) {
-//            System.out.printf("%3d,", x);
+//        int[] arr2 = new int[arr.length * arr[0].length];
+//        for (int i = 0; i < arr.length; i++) {
+//            System.arraycopy(arr[i], 0, arr2, i * arr[i].length, arr[i].length);
 //        }
-//        System.out.println();
+        //*** let`s reduce dimension of arr - expand 2-dimension array to one line
+        int lenghtOfNewArr = 0;
+        for(int[] y:arr){
+            for(int x:y){
+                lenghtOfNewArr++;
+            }
+        }
+        int[] arr2 = new int[lenghtOfNewArr];
+        int countOfCopyedEl = 0;
+        for (int i = 0; i < arr.length; i++) {
+            System.arraycopy(arr[i], 0, arr2, countOfCopyedEl+0, arr[i].length);
+            countOfCopyedEl += arr[i].length;
+        }
         return IntStream.of(arr2).distinct().boxed().mapToInt(Integer::intValue).max().getAsInt();
     }
 
@@ -78,19 +119,35 @@ public class dz53_6 {
 
     public static int getMinStrm(int[][] arr) {
         //*** let`s reduce dimension of arr - expand 2-dimension array to one line
-        int[] arr2 = new int[arr.length * arr[0].length];
+        int lenghtOfNewArr = 0;
+        for(int[] y:arr){
+            for(int x:y){
+                lenghtOfNewArr++;
+            }
+        }
+        int[] arr2 = new int[lenghtOfNewArr];
+        int countOfCopyedEl = 0;
         for (int i = 0; i < arr.length; i++) {
-            System.arraycopy(arr[i], 0, arr2, i * arr[i].length, arr[i].length);
+            System.arraycopy(arr[i], 0, arr2, countOfCopyedEl+0, arr[i].length);
+            countOfCopyedEl += arr[i].length;
         }
         return IntStream.of(arr2).distinct().boxed().mapToInt(Integer::intValue).min().getAsInt();
     }
 
 
-    public static void GetDuplicatedValIdx(int[][] arr) {
+    public static int[][] GetDuplicatedValIdx(int[][] arr) {
         //*** let`s reduce dimension of arr - expand 2-dimension array to one line
-        int[] arr2 = new int[arr.length * arr[0].length];
+        int lenghtOfNewArr = 0;
+        for(int[] y:arr){
+            for(int x:y){
+                lenghtOfNewArr++;
+            }
+        }
+        int[] arr2 = new int[lenghtOfNewArr];
+        int countOfCopyedEl = 0;
         for (int i = 0; i < arr.length; i++) {
-            System.arraycopy(arr[i], 0, arr2, i * arr[i].length, arr[i].length);
+            System.arraycopy(arr[i], 0, arr2, countOfCopyedEl+0, arr[i].length);
+            countOfCopyedEl += arr[i].length;
         }
         //sort the arr for compare current element with previous
         Arrays.sort(arr2);
@@ -112,17 +169,54 @@ public class dz53_6 {
                         System.arraycopy(reduplicationArr[j], 0, tmpArr[j], 0, reduplicationArr[j].length);
                     }
                     reduplicationArr = tmpArr;
-                    tmpArr = new int[0][0]; //release some memory
+                    tmpArr = null; //release some memory
 
                     reduplicationArr[reduplicationArr.length-1][0] = arr[y][x];
-                    reduplicationArr[reduplicationArr.length-1][1] = y;
-                    reduplicationArr[reduplicationArr.length-1][2] = x;
+                    reduplicationArr[reduplicationArr.length-1][1] = y+1;
+                    reduplicationArr[reduplicationArr.length-1][2] = x+1;
                 }
             }
         }
-        for (int i = 0; i < reduplicationArr.length; i++) {
-            System.out.println(Arrays.toString(reduplicationArr[i]));
+//        System.out.println("duplicated values and its indexes are:");
+//        for (int i = 0; i < reduplicationArr.length; i++) {
+//            System.out.println(Arrays.toString(reduplicationArr[i]));
+//        }
+        return reduplicationArr;
+    }
+
+    public static void GetDuplicatedValIdxStrm(int[][] arr) {
+
+        Map<Integer, MyStorage> myMap = new HashMap<>();//the arrays value will be as a key and the number of reduplication will be as a Value of Map
+        int value;
+        MyStorage myStorage;
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                value = arr[i][j];
+                if (myMap.containsKey(value)) {
+                    myStorage = myMap.get(value);
+                    myStorage.incNumDuplication(i, j);
+
+                } else {
+                    myMap.put(value, new MyStorage(1, i, j));
+                }
+            }
         }
+
+        myMap = myMap.entrySet().stream().filter(e -> e.getValue().getNumDuplication() != 1).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        System.out.println("The number of duplicated values is " + myMap.size());
+
+        for (var entry : myMap.entrySet()) {
+            System.out.println("Value " + entry.getKey() + " occurs " + entry.getValue().getNumDuplication() + " time(s)");
+
+            for (int i = 0; i < entry.getValue().getIndex_y().size(); i++) {
+                System.out.print("line = " + (entry.getValue().getIndex_y().get(i)+1)+" ");
+                System.out.print("column = " + (entry.getValue().getIndex_x().get(i)+1));
+                System.out.println();
+            }
+            System.out.println();
+
+        }
+
     }
 
 
@@ -135,29 +229,39 @@ public class dz53_6 {
 //            }
 //        }
 
-
-//        for (int[] y : arr) {
-//            for (int x : y) {
-//                System.out.printf("%3d", x);
-//            }
-//            System.out.println();
-//        }
-
-//        System.out.println("min value of array calculated by the fori-meth is  " + getMin(arr));
-//        System.out.println("min value of array calculated by the Stream-meth is " + getMinStrm(arr));
-//
-//        System.out.println("max value of array calculated by the fori-meth is  " + getMax(arr));
-//        System.out.println("max value of array calculated by the Stream-meth is " + getMaxStrm(arr));
-
-        int[][] arr2 = {{1,2,3},{4,2,1}};
-        for (int[] y : arr2) {
+        int[][] arr = {{1,3,2,5,4},{0,9,8,4,3,5,6}};
+        System.out.println("the original array is:");
+        for (int[] y : arr) {
+            System.out.print("{");
             for (int x : y) {
                 System.out.printf("%3d", x);
             }
-            System.out.println();
+            System.out.println(" }");
         }
 
-        GetDuplicatedValIdx(arr2);
+
+        System.out.println("min value of array calculated by the fori-meth is  " + getMin(arr));
+        System.out.println("min value of array calculated by the Stream-meth is " + getMinStrm(arr));
+
+        System.out.println("max value of array calculated by the fori-meth is  " + getMax(arr));
+        System.out.println("max value of array calculated by the Stream-meth is " + getMaxStrm(arr));
+
+
+
+        int [][] reduplicationArr = GetDuplicatedValIdx(arr);
+        if(reduplicationArr.length > 0) {
+            System.out.println("duplicated values and its indexes are [duplicated_value, line, column]:");
+            for (int i = 0; i < reduplicationArr.length; i++) {
+                System.out.println(Arrays.toString(reduplicationArr[i]));
+            }
+        }
+        else{
+            System.out.println("The duplicated values are not found.");
+        }
+
+        System.out.println();
+        GetDuplicatedValIdxStrm(arr);
 
     }
 }
+
