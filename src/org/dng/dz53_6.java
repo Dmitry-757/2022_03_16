@@ -240,14 +240,27 @@ public class dz53_6 {
         }
 
 
+        long startTime = System.currentTimeMillis();
         System.out.println("min value of array calculated by the fori-meth is  " + getMin(arr));
+        System.out.println("Time for calculate min value of 2-dimension array is :"+(System.currentTimeMillis()-startTime)+" ms");
+        System.out.println();
+        startTime = System.currentTimeMillis();
         System.out.println("min value of array calculated by the Stream-meth is " + getMinStrm(arr));
+        System.out.println("Time for calculate min value of 2-dimension array using stream is :"+(System.currentTimeMillis()-startTime)+" ms");
 
+        System.out.println();
+        startTime = System.currentTimeMillis();
         System.out.println("max value of array calculated by the fori-meth is  " + getMax(arr));
+        System.out.println("Time for calculate max value of 2-dimension array is :"+(System.currentTimeMillis()-startTime)+" ms");
+
+        System.out.println();
+        startTime = System.currentTimeMillis();
         System.out.println("max value of array calculated by the Stream-meth is " + getMaxStrm(arr));
+        System.out.println("Time for calculate max value of 2-dimension array using stream is :"+(System.currentTimeMillis()-startTime)+" ms");
 
 
-
+        System.out.println();
+        startTime = System.currentTimeMillis();
         int [][] reduplicationArr = GetDuplicatedValIdx(arr);
         if(reduplicationArr.length > 0) {
             System.out.println("duplicated values and its indexes are [duplicated_value, line, column]:");
@@ -258,9 +271,13 @@ public class dz53_6 {
         else{
             System.out.println("The duplicated values are not found.");
         }
+        System.out.println("Time for search duplicated values in 2-dimension array is :"+(System.currentTimeMillis()-startTime)+" ms");
+
 
         System.out.println();
+        startTime = System.currentTimeMillis();
         GetDuplicatedValIdxStrm(arr);
+        System.out.println("Time for search duplicated values in 2-dimension array using HashMap/someObjects/stream is :"+(System.currentTimeMillis()-startTime)+" ms");
 
     }
 }
