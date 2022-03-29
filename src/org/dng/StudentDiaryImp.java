@@ -63,14 +63,14 @@ public class StudentDiaryImp {
 
 
     public static void main(String[] args) {
-        Pattern topicPattern = Pattern.compile("^[a-zA-Z]+");
-        Pattern markPattern = Pattern.compile("[2-5]");
+        Pattern topicPattern = Pattern.compile("^[a-zA-Zа-яА-Я]+-?[a-zA-Zа-яА-Я]*");
+        Pattern markPattern = Pattern.compile("\\s\\d+");
         try (Scanner sc = new Scanner(System.in)){
             boolean stop = false;
-            int choice = 0;
+            int choice = -1;
             String line;
             while (!stop){
-                System.out.println("Enter your choice: 1 - add topic and mark, 2 - remove theme, 4 - print marks of topic, 5 - print all topics wuith marks, 0 - exit");
+                System.out.println("Enter your choice: 1 - add topic and mark, 2 - remove topic, 4 - print marks by topic, 5 - print all topics with marks, 0 - exit");
                 if(sc.hasNextInt()){
                     choice = sc.nextInt();
                     sc.nextLine();
@@ -93,7 +93,10 @@ public class StudentDiaryImp {
 
                                 Matcher markMatcher = markPattern.matcher(line);
                                 if (markMatcher.find() ) {
-                                    mark = Integer.valueOf(markMatcher.group()).intValue();
+                                    mark = Integer.valueOf(markMatcher.group().trim()).intValue();
+                                    if((mark<2) || (mark > 5)){
+                                        throw new Exception("wrong input - mark must be in interval of 2-5...");
+                                    }
                                     System.out.println("mark = " + mark);
                                 } else {
                                     throw new Exception("wrong input - mark must be in interval of 2-5...");
@@ -104,6 +107,7 @@ public class StudentDiaryImp {
                             }
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
+                            continue;
                         }
                     }
                     case 2 ->{
@@ -127,7 +131,7 @@ public class StudentDiaryImp {
                     }
 
                     case 3 ->{
-                        System.out.println("Enter topic for увше. Example: MarksizmLenenizm");
+                        System.out.println("Enter topic for topic. Example: MarksizmLenenizm");
                         try{
                             if(sc.hasNextLine()) {
                                 String topic = null;
