@@ -161,7 +161,6 @@ public class StudentDiaryImp {
                                     if (sc.hasNextInt()) {
                                         int idx = sc.nextInt();
                                         sc.nextLine();
-
                                         if ((idx <= 0) || (StudentDiaryImp.diary.get(topic).length < idx)) {
                                             throw new Exception("wrong input - illegal number of mark...");
                                         }
