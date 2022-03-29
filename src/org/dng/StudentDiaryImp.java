@@ -37,7 +37,7 @@ class DiaryService {
 
     static void edit(String topic, int idx, int mark) {
         if ((idx >= 1) || (StudentDiaryImp.diary.get(topic).length <= idx)) {
-            StudentDiaryImp.diary.get(topic)[idx-1] = mark;
+            StudentDiaryImp.diary.get(topic)[idx - 1] = mark;
         } else {
             System.out.println("Wrong number of mark!");
         }
@@ -53,11 +53,9 @@ class DiaryService {
 
     static void printMarks() {
         for (var entry : StudentDiaryImp.diary.entrySet()) {
-            //System.out.println(entry.getKey() + "/" + entry.getValue());
             System.out.println("Topic " + entry.getKey() + " marks " +
                     Arrays.stream(entry.getValue())
-                            .collect(Collectors.toList())
-                            .toString());
+                            .collect(Collectors.toList()));
         }
 
     }
@@ -88,8 +86,8 @@ public class StudentDiaryImp {
                         System.out.println("Enter topic and mark. Example: mathematics 5");
                         try {
                             if (sc.hasNextLine()) {
-                                String topic = null;
-                                int mark = 0;
+                                String topic;
+                                int mark;
                                 line = sc.nextLine();
                                 Matcher topicMatcher = topicPattern.matcher(line);
                                 if (topicMatcher.find()) {
@@ -101,7 +99,7 @@ public class StudentDiaryImp {
 
                                 Matcher markMatcher = markPattern.matcher(line);
                                 if (markMatcher.find()) {
-                                    mark = Integer.valueOf(markMatcher.group().trim()).intValue();
+                                    mark = Integer.parseInt(markMatcher.group().trim());
                                     if ((mark < 2) || (mark > 5)) {
                                         throw new Exception("wrong input - mark must be in interval of 2-5...");
                                     }
@@ -122,7 +120,7 @@ public class StudentDiaryImp {
                         System.out.println("Enter topic for removal. Example: MarksizmLenenizm");
                         try {
                             if (sc.hasNextLine()) {
-                                String topic = null;
+                                String topic;
                                 line = sc.nextLine();
                                 Matcher topicMatcher = topicPattern.matcher(line);
                                 if (topicMatcher.find()) {
@@ -143,7 +141,7 @@ public class StudentDiaryImp {
                         System.out.println("Enter topic for edit marks. Example: MarksizmLenenizm");
                         try {
                             if (sc.hasNextLine()) {
-                                String topic = null;
+                                String topic;
                                 line = sc.nextLine();
                                 Matcher topicMatcher = topicPattern.matcher(line);
                                 if (topicMatcher.find()) {
@@ -165,7 +163,7 @@ public class StudentDiaryImp {
                                             throw new Exception("wrong input - illegal number of mark...");
                                         }
 
-                                        System.out.println("current mark is " + StudentDiaryImp.diary.get(topic)[idx-1]);
+                                        System.out.println("current mark is " + StudentDiaryImp.diary.get(topic)[idx - 1]);
                                         System.out.println("Enter new mark");
                                         if (sc.hasNextInt()) {
                                             int mark = sc.nextInt();
@@ -199,7 +197,7 @@ public class StudentDiaryImp {
                         System.out.println("Enter topic for print marks");
                         try {
                             if (sc.hasNextLine()) {
-                                String topic = null;
+                                String topic;
                                 line = sc.nextLine();
                                 Matcher topicMatcher = topicPattern.matcher(line);
                                 if (topicMatcher.find()) {
@@ -226,7 +224,7 @@ public class StudentDiaryImp {
                     case -1 -> {
                     }
                     default -> {
-                        System.out.println("In our roulette you can only three option for choice: 1, 2 or 0 ;)");
+                        System.out.println("In our roulette you can only three option for choice: 1, 2, 3, 4, 5 or 0 ;)");
                     }
                 }
                 choice = -1;
