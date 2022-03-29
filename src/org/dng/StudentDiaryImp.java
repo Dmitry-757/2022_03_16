@@ -36,7 +36,11 @@ class DiaryService {
     }
 
     static void edit(String topic, int idx, int mark) {
-        StudentDiaryImp.diary.get(topic)[idx] = mark;
+        if ((idx >= 1) || (StudentDiaryImp.diary.get(topic).length <= idx)) {
+            StudentDiaryImp.diary.get(topic)[idx-1] = mark;
+        } else {
+            System.out.println("Wrong number of mark!");
+        }
     }
 
 
@@ -158,11 +162,18 @@ public class StudentDiaryImp {
                                         int idx = sc.nextInt();
                                         sc.nextLine();
 
-                                        System.out.println("current mark is " + StudentDiaryImp.diary.get(topic)[idx]);
+                                        if ((idx <= 0) || (StudentDiaryImp.diary.get(topic).length < idx)) {
+                                            throw new Exception("wrong input - illegal number of mark...");
+                                        }
+
+                                        System.out.println("current mark is " + StudentDiaryImp.diary.get(topic)[idx-1]);
                                         System.out.println("Enter new mark");
                                         if (sc.hasNextInt()) {
                                             int mark = sc.nextInt();
                                             sc.nextLine();
+                                            if ((mark < 2) || (mark > 5)) {
+                                                throw new Exception("wrong input - mark must be in interval of 2-5...");
+                                            }
                                             //editing mark
                                             DiaryService.edit(topic, idx, mark);
                                             DiaryService.printMarks(topic);
@@ -170,10 +181,11 @@ public class StudentDiaryImp {
                                             System.out.println("wrong input!");
                                         }
                                     } else {
-                                        System.out.println("wrong input!");
+                                        throw new Exception("wrong input!");
                                     }
                                 } else {
                                     System.out.println("this topic isn't found!");
+                                    throw new Exception("wrong input!");
                                 }
 
 
