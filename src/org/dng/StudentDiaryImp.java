@@ -33,11 +33,15 @@ class DiaryService {
         if (StudentDiaryImp.diary.containsKey(topic)) {
             StudentDiaryImp.diary.remove(topic);
         }
+        else System.out.println("we don't study that crap! ;) ");
+
     }
 
     static void edit(String topic, int idx, int mark) {
         if ((idx >= 1) || (StudentDiaryImp.diary.get(topic).length <= idx)) {
             StudentDiaryImp.diary.get(topic)[idx - 1] = mark;
+            System.out.println("new mark set "+mark);
+            System.out.println();
         } else {
             System.out.println("Wrong number of mark!");
         }
@@ -46,9 +50,12 @@ class DiaryService {
 
     static void printMarks(String topic) {
         if (StudentDiaryImp.diary.containsKey(topic)) {
+            System.out.print("[ ");
             Arrays.stream(StudentDiaryImp.diary.get(topic)).forEach(v -> System.out.print("" + v + ", "));
-            System.out.println();
+            System.out.print(" ]");
         }
+        else System.out.println("we don't study that crap! ;) ");
+        System.out.println();
     }
 
     static void printMarks() {
@@ -57,7 +64,50 @@ class DiaryService {
                     Arrays.stream(entry.getValue())
                             .collect(Collectors.toList()));
         }
+        System.out.println();
+    }
 
+    public static void showMinMark() {
+        int minMark = 10;
+        String topic = null;
+        for (var entry : StudentDiaryImp.diary.entrySet()) {
+            int val = Arrays.stream(entry.getValue()).collect(Collectors.summarizingInt(Integer::intValue)).getMin();
+            if (minMark > val) {
+                minMark = val;
+                topic = entry.getKey();
+            }
+        }
+        if (topic != null) {
+            System.out.println("Min mark is " + minMark + " for topic " + topic);
+            System.out.println();
+        }
+    }
+
+    public static void showMaxMark() {
+        int maxMark = 0;
+        String topic = null;
+        for (var entry : StudentDiaryImp.diary.entrySet()) {
+            int val = Arrays.stream(entry.getValue()).collect(Collectors.summarizingInt(Integer::intValue)).getMin();
+            if (maxMark < val) {
+                maxMark = val;
+                topic = entry.getKey();
+            }
+        }
+        if (topic != null) {
+            System.out.println("Max mark is " + maxMark + " for topic " + topic);
+            System.out.println();
+        }
+    }
+
+    public static void showAverageMark() {
+        int sum = 0, count = 0;
+        for (var entry : StudentDiaryImp.diary.entrySet()) {
+            int val = Arrays.stream(entry.getValue()).collect(Collectors.summarizingInt(Integer::intValue)).getMin();
+            sum += Arrays.stream(entry.getValue()).collect(Collectors.summarizingInt(Integer::intValue)).getSum();
+            count += Arrays.stream(entry.getValue()).collect(Collectors.summarizingInt(Integer::intValue)).getCount();
+        }
+        System.out.printf("Average mark is %.2f",(double) sum / count);
+        System.out.println();
     }
 }
 
@@ -79,8 +129,13 @@ public class StudentDiaryImp {
                 System.out.println("6 - show max mark and topic, 7 - show min mark and topic, 8 - show average mark, 0 - exit");
                 if (sc.hasNextInt()) {
                     choice = sc.nextInt();
-                    sc.nextLine();
                 }
+                else {
+                    choice = -1;
+                    System.out.println("Wrong input. Try again.");
+                }
+                sc.nextLine();
+
                 switch (choice) {
                     case 1 -> {
                         System.out.println("Enter topic and mark. Example: mathematics 5");
@@ -217,6 +272,16 @@ public class StudentDiaryImp {
                     case 5 -> {
                         DiaryService.printMarks();
                     }
+                    //6 - show max mark and topic, 7 - show min mark and topic, 8 - show average mark
+                    case 6 -> {
+                        DiaryService.showMaxMark();
+                    }
+                    case 7 -> {
+                        DiaryService.showMinMark();
+                    }
+                    case 8 -> {
+                        DiaryService.showAverageMark();
+                    }
                     case 0 -> {
                         stop = true;
                         System.out.println("Our great program is ended ;) !");
@@ -224,7 +289,7 @@ public class StudentDiaryImp {
                     case -1 -> {
                     }
                     default -> {
-                        System.out.println("In our roulette you can only three option for choice: 1, 2, 3, 4, 5 or 0 ;)");
+                        System.out.println("In our roulette you can only three option for choice: 1, 2, 3, 4, 5, 6, 7, 8 or 0 ;)");
                     }
                 }
                 choice = -1;

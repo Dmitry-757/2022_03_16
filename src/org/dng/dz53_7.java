@@ -18,6 +18,7 @@ public class dz53_7 {
         boolean done = false;
         try (Scanner sc = new Scanner(System.in)) {
             while (!done) {
+                System.out.println();
                 System.out.println("Please, enter the " + name);
                 if (sc.hasNextInt()) {
                     value = sc.nextInt();

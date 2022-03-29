@@ -203,6 +203,7 @@ public class dz53_6 {
         }
 
         myMap = myMap.entrySet().stream().filter(e -> e.getValue().getNumDuplication() != 1).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        System.out.println("Search a duplicated values in 2-dimension array using HashMap/someObjects/stream...");
         System.out.println("The number of duplicated values is " + myMap.size());
 
         for (var entry : myMap.entrySet()) {
@@ -221,24 +222,25 @@ public class dz53_6 {
 
 
     public static void main(String[] args) {
-//        int dimension = inputIntValue("dimension of array");
-//        int[][] arr = new int[dimension][dimension];
-//        for (int y = 0; y < arr.length; y++) {
-//            for (int x = 0; x < arr[0].length; x++) {
-//                arr[y][x] = (int) (Math.random() * 100);
-//            }
-//        }
+        int dimension = inputIntValue("dimension of array");
+        int[][] arr = new int[dimension][dimension];
+        for (int y = 0; y < arr.length; y++) {
+            for (int x = 0; x < arr[0].length; x++) {
+                arr[y][x] = (int) (Math.random() * 10000);
+            }
+        }
 
-        int[][] arr = {{1,3,2,5,4},{0,9,8,4,3,5,6}};
+        System.out.println();
+//        int[][] arr = {{1,3,2,5,4},{0,9,8,4,3,5,6}};
         System.out.println("the original array is:");
         for (int[] y : arr) {
             System.out.print("{");
             for (int x : y) {
-                System.out.printf("%3d", x);
+                System.out.printf("%3d  ", x);
             }
             System.out.println(" }");
         }
-
+        System.out.println();
 
         long startTime = System.currentTimeMillis();
         System.out.println("min value of array calculated by the fori-meth is  " + getMin(arr));
